@@ -1,0 +1,145 @@
+﻿@model IEnumerable<FitnessCenter>
+@using ProjWeb.Models
+
+<header>
+    <style>
+        table {
+            margin-top: 5%;
+            align-content: center;
+            width: 75%;
+            border-collapse: collapse;
+        }
+
+        #Input, #Input1, #Input2 {
+            background-image: url('/css/searchicon.png');
+            background-position: 10px 12px;
+            background-repeat: no-repeat;
+            width: 75%;
+            font-size: 16px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 8px;
+            margin-top: 5%;
+        }
+
+        th {
+            cursor: pointer;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #D6EEEE;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+    <script>
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("fitness");
+            switching = true;
+            dir = "asc";
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount++;
+                } else {
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+        function searchTable() {
+            var input = document.getElementById("Input");
+            var input1 = document.getElementById("Input1");
+            var input2 = document.getElementById("Input2");
+            var filter = input.value.toUpperCase();
+            var filter1 = input1.value.toUpperCase();
+            var filter2 = input2.value.toUpperCase();
+            var table = document.getElementById("fitness");
+            var trs = table.tBodies[0].getElementsByTagName("tr");
+
+            for (var i = 1; i < trs.length; i++) {
+
+                var tds = trs[i].getElementsByTagName("td");
+
+                trs[i].style.display = "none";
+
+                for (var i2 = 0; i2 < tds.length; i2++) {
+
+                    if (tds[0].innerHTML.toUpperCase().indexOf(filter) > -1
+                        && tds[2].innerHTML.toUpperCase().indexOf(filter1) > -1
+                        && tds[3].innerHTML.toUpperCase().indexOf(filter2) > -1) {
+
+                        trs[i].style.display = "";
+                        continue;
+
+                    }
+                }
+            }
+
+        }
+    </script>
+</header>
+
+<input type="text" id="Input" onkeyup="searchTable()" placeholder="Search by name...">
+<input type="text" id="Input1" onkeyup="searchTable()" placeholder="Search by address...">
+<input type="text" id="Input2" onkeyup="searchTable()" placeholder="Search by year...">
+<table id="fitness" class="table">
+    <tr>
+        <th onclick="sortTable(0)">name</th>
+        <th onclick="sortTable(1)">owner</th>
+        <th onclick="sortTable(2)">address</th>
+        <th onclick="sortTable(3)">opYear</th>
+        <th onclick="sortTable(4)">prGroupTr</th>
+        <th onclick="sortTable(5)">prMnthTr</th>
+        <th onclick="sortTable(6)">prPersTr</th>
+        <th onclick="sortTable(7)">prSingTr</th>
+        <th onclick="sortTable(8)">prYearTr</th>
+        <th>Details</th>
+    </tr>
+    @foreach (FitnessCenter fc in Model)
+    {
+    <tr>
+        <td>@fc.name</td>
+        <td>@fc.owner.name</td>
+        <td>@fc.address</td>
+        <td>@fc.openingYear</td>
+        <td>@fc.priceGroupTraining</td>
+        <td>@fc.priceMonth</td>
+        <td>@fc.pricePersonalTraining</td>
+        <td>@fc.priceTraining</td>
+        <td>@fc.priceYear</td>
+        <td>
+            <form form method="get" action="~/Fitness/GetFitnessCenter">
+                <input type="submit" name="page" value="@fc.name" style="width:100%"/>
+            </form>
+        </td>
+    </tr>
+    }
+</table>

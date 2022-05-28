@@ -1,0 +1,47 @@
+﻿@using ProjWeb.Models;
+@{
+    ViewBag.Title = "Login";
+}
+
+<h2>Login</h2>
+
+@{
+    User visitor = (User)Session["visitor"];
+    User owner = (User)Session["owner"];
+    User trainer = (User)Session["trainer"];
+    if (visitor != null)
+    {
+        <h1>YOU ARE LOGGED IN AS VISITOR - @visitor.username</h1>
+        <form method="post" action="~/Users/Logout">
+            <input type="submit" value="Logout" />
+        </form>
+    }
+    else if (owner != null)
+    {
+        <h1>YOU ARE LOGGED IN AS OWNER - @owner.username</h1>
+        <form method="post" action="~/Users/Logout">
+            <input type="submit" value="Logout" />
+        </form>
+    }
+    else if (trainer != null)
+    {
+        <h1>YOU ARE LOGGED IN AS TRAINER - @trainer.username</h1>
+        <form method="post" action="~/Users/Logout">
+            <input type="submit" value="Logout" />
+        </form>
+    }
+    else
+    {
+        <h1>YOU ARE NOT LOGGED IN</h1>
+        <form method="post" action="~/Users/login">
+            <input name="username" id="username" />
+            <label for="username">username</label>
+            <br />
+            <input name="password" type="password" id="password" />
+            <label for="password">password</label>
+            <br />
+            <input type="submit" value="Login" />
+        </form>
+
+    }
+}

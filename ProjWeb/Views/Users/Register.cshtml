@@ -1,0 +1,61 @@
+﻿
+@{
+    ViewBag.Title = "Register";
+}
+@using ProjWeb.Models
+<h2>Register</h2>
+<h3>@ViewBag.message</h3>
+@{
+    User visitor = (User)Session["visitor"];
+    User owner = (User)Session["owner"];
+    User trainer = (User)Session["trainer"];
+    if ((visitor == null) && (owner == null) && (trainer == null))
+    {
+<form method="post" action="~/Users/Register">
+    <input required name="username" id="username" />
+    <label for="username">username</label>
+    <br />
+    <input required name="password" type="password" id="password" />
+    <label for="password">password</label>
+    <br />
+    <input required name="name" id="name" />
+    <label for="name">name</label>
+    <br />
+    <input required name="lastName" id="lastName" />
+    <label for="lastName">last name</label>
+    <br />
+    <input required name="email" type="email" id="email" />
+    <label for="email">email</label>
+    <br />
+    <input required name="dateOfBirth" type="date" id="date" />
+    <label for="date">date of birth</label>
+    <br />
+    <br />
+    <label>gender</label>
+    <br />
+    <input required type="radio" id="male" name="gender" value="male">
+    <label for="male">male</label>
+    <br />
+    <input required type="radio" id="female" name="gender" value="female">
+    <label for="female">female</label>
+    <br />
+    <br />
+    <label>Role</label>
+    <br />
+    <input required type="radio" id="visitor" name="role" value="visitor">
+    <label for="visitor">visitor</label>
+    <br />
+    <input required type="radio" id="owner" name="role" value="owner">
+    <label for="owner">owner</label>
+    <br />
+    <input required type="radio" id="trainer" name="role" value="trainer">
+    <label for="trainer">trainer</label>
+    <br />
+    <input type="submit" value="Register" />
+</form>
+    }
+    else
+    {
+        <h1>YOU ARE LOGGED IN</h1>
+    }
+}
