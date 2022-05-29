@@ -33,7 +33,7 @@ namespace ProjWeb.Models
         }
         public User()
         {
-
+            this.name = "djura";
         }
     }
 }

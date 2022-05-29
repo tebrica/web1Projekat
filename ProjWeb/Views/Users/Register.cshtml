@@ -7,9 +7,7 @@
 <h3>@ViewBag.message</h3>
 @{
     User visitor = (User)Session["visitor"];
-    User owner = (User)Session["owner"];
-    User trainer = (User)Session["trainer"];
-    if ((visitor == null) && (owner == null) && (trainer == null))
+    if (visitor == null)
     {
 <form method="post" action="~/Users/Register">
     <input required name="username" id="username" />

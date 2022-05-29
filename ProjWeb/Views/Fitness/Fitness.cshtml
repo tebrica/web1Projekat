@@ -6,6 +6,27 @@
     ViewBag.Title = "Fitness";
 }
 
+<style>
+    table {
+        margin-top: 5%;
+        align-content: center;
+        width: 75%;
+        border-collapse: collapse;
+    }
+
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+        width: 20%
+    }
+
+    tr:nth-child(even) {
+        background-color: #D6EEEE;
+        border-bottom: 1px solid #ddd;
+    }
+</style>
+
 <h2>Fitness</h2>
 
 <h3>@Model.name</h3>
@@ -17,3 +38,36 @@
 <h3>@Model.pricePersonalTraining</h3>
 <h3>@Model.priceTraining</h3>
 <h3>@Model.priceYear</h3>
+
+<table id="fitness" class="table">
+    <tr>
+        <th>name</th>
+        <th>duration</th>
+        <th>time</th>
+        <th>type</th>
+        <th>capacity</th>
+    </tr>
+    @foreach (GroupTraining gt in Database.groupTrainings.Values.Where(x => x.fitnessCenter.name.Equals(Model.name)))
+    {
+        <tr>
+            <td>@gt.name</td>
+            <td>@gt.trainingDuration</td>
+            <td>@gt.trainingTime</td>
+            <td>@gt.trainingType</td>
+            <td>@gt.userCapacity</td>
+        </tr>
+    }
+</table>
+<br />
+<h3>COMMENTS:</h3>
+<br />
+<ul>
+    @foreach (Comment c in Database.comments.Where(x => x.fitnessCenter.name.Equals(Model.name)))
+    {
+        <li style="border:">
+            <p>@c.text</p>
+            <p>@c.mark</p>
+            <p style="font:bold;">@c.user.name</p>
+        </li>
+    }
+</ul>

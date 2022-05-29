@@ -1,0 +1,50 @@
+﻿
+@{
+    ViewBag.Title = "Profile";
+}
+@using ProjWeb.Models
+<h2>Profile</h2>
+
+@{
+    User visitor = (User)Session["visitor"];
+    
+    if (visitor != null)
+    {
+        <p>username: @visitor.username</p>
+        <p>name: @visitor.name</p>
+        <p>last name: @visitor.lastName</p>
+        <p>role: @visitor.role</p>
+        <p>email: @visitor.email</p>
+        <p>gender: @visitor.gender</p>
+        <p>data of birth: @visitor.dateOfBirth</p>
+        <br />
+        <h3>EDIT PROFILE:</h3>
+        <form method="post" action="~/Users/Register">
+            <input required name="password" type="password" id="password" />
+            <label for="password">password</label>
+            <br />
+            <input required name="name" id="name" />
+            <label for="name">name</label>
+            <br />
+            <input required name="lastName" id="lastName" />
+            <label for="lastName">last name</label>
+            <br />
+            <input required name="email" type="email" id="email" />
+            <label for="email">email</label>
+            <br />
+            <input required name="dateOfBirth" type="date" id="date" />
+            <label for="date">date of birth</label>
+            <br />
+            <br />
+            <label>gender</label>
+            <br />
+            <input required type="radio" id="male" name="gender" value="male">
+            <label for="male">male</label>
+            <br />
+            <input required type="radio" id="female" name="gender" value="female">
+            <label for="female">female</label>
+            <br />
+            <input type="submit" value="Register" />
+        </form>
+    }
+}

@@ -18,6 +18,10 @@ namespace ProjWeb.Controllers
         {
             return View("Login");
         }
+        public ActionResult Profile()
+        {
+            return View("Profile");
+        }
         [HttpPost]
         public ActionResult Register()
         {
@@ -38,6 +42,13 @@ namespace ProjWeb.Controllers
             var roleString = Request["role"] != null ? Request["role"] :
            string.Empty;
 
+            User visitor = (User)Session["visitor"];
+            if (visitor != null)
+            {
+                username = visitor.username;
+                roleString = visitor.role.ToString();
+            }
+
             Enum.TryParse(genderString, out gender gender);
             Enum.TryParse(roleString, out role role);
             DateTime.TryParse(dateOfBirthString, out DateTime dateOfBirth);
@@ -56,19 +67,21 @@ namespace ProjWeb.Controllers
                 );
             try
             {
-                Database.users.Add(username, user);
+                if (visitor != null)
+                {
+                    Database.users[username] = user;
+                }
+                else
+                {
+                    Database.users.Add(username, user);
+                }
             }
             catch
             {
                 ViewBag.message = "USERNAME EXISTS";
                 return View("Register");
             }
-            if (user.role.Equals(role.visitor))
                 Session["visitor"] = user;
-            else if (user.role.Equals(role.owner))
-                Session["owner"] = user;
-            else if (user.role.Equals(role.trainer))
-                Session["trainer"] = user;
 
             return RedirectToAction("Index", "Home");
         }
@@ -84,23 +97,15 @@ namespace ProjWeb.Controllers
             {
                 if (Database.users[username].password.Equals(password))
                 {
-                    if (Database.users[username].role.Equals(role.visitor))
-                        Session["visitor"] = Database.users[username];
-                    if (Database.users[username].role.Equals(role.owner))
-                        Session["owner"] = Database.users[username];
-                    if (Database.users[username].role.Equals(role.trainer))
-                        Session["trainer"] = Database.users[username];
+                    Session["visitor"] = Database.users[username];
                 }
             }
 
             return RedirectToAction("Index", "Home");
         }
-        [HttpPost]
         public ActionResult logout()
         {
             Session["visitor"] = null;
-            Session["owner"] = null;
-            Session["trainer"] = null;
             return RedirectToAction("Index", "Home");
         }
     }

@@ -6,26 +6,10 @@
 <h2>Login</h2>
 
 @{
-    User visitor = (User)Session["visitor"];
-    User owner = (User)Session["owner"];
-    User trainer = (User)Session["trainer"];
-    if (visitor != null)
+    if ((User)Session["visitor"] != null)
     {
-        <h1>YOU ARE LOGGED IN AS VISITOR - @visitor.username</h1>
-        <form method="post" action="~/Users/Logout">
-            <input type="submit" value="Logout" />
-        </form>
-    }
-    else if (owner != null)
-    {
-        <h1>YOU ARE LOGGED IN AS OWNER - @owner.username</h1>
-        <form method="post" action="~/Users/Logout">
-            <input type="submit" value="Logout" />
-        </form>
-    }
-    else if (trainer != null)
-    {
-        <h1>YOU ARE LOGGED IN AS TRAINER - @trainer.username</h1>
+        User visitor = (User)Session["visitor"];
+        <h1>YOU ARE LOGGED IN AS @visitor.role - @visitor.username</h1>
         <form method="post" action="~/Users/Logout">
             <input type="submit" value="Logout" />
         </form>
