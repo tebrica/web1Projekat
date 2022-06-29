@@ -23,10 +23,10 @@ namespace ProjWeb.Controllers
                 Database.groupTrainings.Add("zxc", new GroupTraining("zxc", trainingType.bodyPump, Database.fitnessCenters["asd"], 3, DateTime.Now, 10, new List<User>()));
                 Database.groupTrainings.Add("fgh", new GroupTraining("fgh", trainingType.yoga, Database.fitnessCenters["fgh"], 3, DateTime.Now, 12, new List<User>()));
 
-                Database.comments.Add(new Comment(new Models.User(), Database.fitnessCenters["asd"], "PRE LO SE", 1));
-                Database.comments.Add(new Comment(new Models.User(), Database.fitnessCenters["asd"], "KIDA", 5));
-                Database.comments.Add(new Comment(new Models.User(), Database.fitnessCenters["asd"], "SMECE", 2));
-                Database.comments.Add(new Comment(new Models.User(), Database.fitnessCenters["qwe"], "STA JE OVO", 2));
+                Database.comments.Add(0, new Comment(new Models.User(), Database.fitnessCenters["asd"], "PRE LO SE", 1, 0));
+                Database.comments.Add(1, new Comment(new Models.User(), Database.fitnessCenters["asd"], "KIDA", 5, 1));
+                Database.comments.Add(2, new Comment(new Models.User(), Database.fitnessCenters["asd"], "SMECE", 2, 2));
+                Database.comments.Add(3, new Comment(new Models.User(), Database.fitnessCenters["qwe"], "STA JE OVO", 2, 3));
             }
             catch { }
             return View(Database.fitnessCenters.Values.OrderBy(x=>x.name));

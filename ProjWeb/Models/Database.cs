@@ -27,6 +27,6 @@ namespace ProjWeb.Models
         public static Dictionary<string, User> users = new Dictionary<string, User>();
         public static Dictionary<string, FitnessCenter> fitnessCenters = new Dictionary<string, FitnessCenter>();
         public static Dictionary<string, GroupTraining> groupTrainings = new Dictionary<string, GroupTraining>();
-        public static List<Comment> comments = new List<Comment>();
+        public static Dictionary<int, Comment> comments = new Dictionary<int, Comment>();
     }
 }

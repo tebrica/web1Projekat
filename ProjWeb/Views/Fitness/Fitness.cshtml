@@ -49,25 +49,124 @@
     </tr>
     @foreach (GroupTraining gt in Database.groupTrainings.Values.Where(x => x.fitnessCenter.name.Equals(Model.name)))
     {
+        if (gt.deleted)
+        {
+            continue;
+        }
         <tr>
             <td>@gt.name</td>
             <td>@gt.trainingDuration</td>
             <td>@gt.trainingTime</td>
             <td>@gt.trainingType</td>
             <td>@gt.userCapacity</td>
+            @if ((User)Session["visitor"] != null && gt.userCapacity > gt.users.Count)
+            {
+                User visitor = (User)Session["visitor"];
+                if (!visitor.groupTrainings.Contains(gt) && visitor.role.Equals(role.visitor))
+                {
+                    <td>
+                        <form form method="post" action="~/Fitness/SignUp">
+                            <input type="submit" name="training" value="@gt.name" style="width:100%" />
+                        </form>
+                    </td>
+                }
+            }
+            @if ((User)Session["visitor"] != null)
+            {
+                User visitor = (User)Session["visitor"];
+                if (visitor.role.Equals(role.trainer) &&
+                    gt.users.Count == 0 &&
+                    visitor.fitnessCenter.Equals(gt.fitnessCenter) &&
+                    visitor.groupTrainings.Contains(gt))
+                {
+                    <td>
+                        <form form method="post" action="~/Fitness/Delete">
+                            <input type="submit" name="training" value="@gt.name" style="width:100%" />
+                        </form>
+                    </td>
+                }
+            }
         </tr>
     }
 </table>
 <br />
 <h3>COMMENTS:</h3>
 <br />
-<ul>
-    @foreach (Comment c in Database.comments.Where(x => x.fitnessCenter.name.Equals(Model.name)))
+@if ((User)Session["visitor"] != null)
+{
+    User visitor = (User)Session["visitor"];
+    if (visitor.role.Equals(role.trainer))
     {
-        <li style="border:">
-            <p>@c.text</p>
-            <p>@c.mark</p>
-            <p style="font:bold;">@c.user.name</p>
-        </li>
+        <td>
+            <form form method="post" action="~/Fitness/Create">
+                <input required name="name" id="name" />
+                <label for="name">name</label>
+                <br />
+                <input required name="dateOfBirth" type="date" id="date" />
+                <label for="date">date of birth</label>
+                <br />
+                <label>Role</label>
+                <br />
+                <input required type="radio" id="visitor" name="role" value="visitor">
+                <label for="visitor">visitor</label>
+                <br />
+                <input required type="radio" id="owner" name="role" value="owner">
+                <label for="owner">owner</label>
+                <br />
+                <input required type="radio" id="trainer" name="role" value="trainer">
+                <label for="trainer">trainer</label>
+                <br />
+                <input type="submit" value="Create" />
+            </form>
+        </td>
+    }
+}
+@if ((User)Session["visitor"] != null)
+{
+    User visitor = (User)Session["visitor"];
+    if (visitor.groupTrainings.Find(x => x.fitnessCenter.Equals(Model)) != null && visitor.role.Equals(role.visitor))
+    {
+        <form method="post" action="~/Fitness/Comment">
+            <input type="text" name="center" value="@Model.name" readonly />
+            <br />
+            <input type="text" name="comment" id="comment" />
+            <label for="comment">Comment</label>
+            <br />
+            <select name="mark" id="mark">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+            </select>
+            <label for="mark">mark</label>
+            <br />
+            <input type="submit" value="Comment" />
+        </form>
+    }
+
+}
+<ul>
+    @foreach (Comment c in Database.comments.Values.Where(x => x.fitnessCenter.name.Equals(Model.name)))
+    {
+        User visitor = new User();
+        if ((User)Session["visitor"] != null)
+        {
+            visitor = (User)Session["visitor"];
+        }
+        if (c.approved || visitor.role.Equals(role.owner))
+        {
+            <li style="border:">
+                <p>@c.text</p>
+                <p>@c.mark</p>
+                <p style="font:bold;">@c.user.name</p>
+                @if (visitor.role.Equals(role.owner) && !c.approved)
+                {
+                    <form form method="get" action="~/Fitness/ApproveComment">
+                        <input type="submit" name="comment" value="@c.id" style="width:100%" />
+                    </form>
+                }
+            </li>
+        }
     }
 </ul>

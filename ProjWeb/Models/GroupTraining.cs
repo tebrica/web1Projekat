@@ -14,7 +14,7 @@ namespace ProjWeb.Models
         public DateTime trainingTime;
         public int userCapacity;
         public List<User> users;
-
+        public bool deleted;
         public GroupTraining(string name, trainingType trainingType, FitnessCenter fitnessCenter, int trainingDuration, DateTime trainingTime, int userCapacity, List<User> users)
         {
             this.name = name ?? throw new ArgumentNullException(nameof(name));
@@ -24,6 +24,7 @@ namespace ProjWeb.Models
             this.trainingTime = trainingTime;
             this.userCapacity = userCapacity;
             this.users = users ?? throw new ArgumentNullException(nameof(users));
+            this.deleted = false;
         }
     }
 }
