@@ -53,8 +53,25 @@
         {
             continue;
         }
-        <tr>
-            <td>@gt.name</td>
+    <tr>
+            @if ((User)Session["visitor"] != null)
+            {
+                User visitor = (User)Session["visitor"];
+                if (visitor.role.Equals(role.trainer) &&
+                    visitor.fitnessCenter.Contains(gt.fitnessCenter) &&
+                    visitor.groupTrainings.Contains(gt))
+                {
+                    <td>
+                        <form form method="post" action="~/Fitness/Training">
+                            <input type="submit" name="training" value="@gt.name" style="width:100%" />
+                        </form>
+                    </td>
+                }
+                else
+                {
+                    <td>@gt.name</td>
+                }
+            }
             <td>@gt.trainingDuration</td>
             <td>@gt.trainingTime</td>
             <td>@gt.trainingType</td>
@@ -76,7 +93,7 @@
                 User visitor = (User)Session["visitor"];
                 if (visitor.role.Equals(role.trainer) &&
                     gt.users.Count == 0 &&
-                    visitor.fitnessCenter.Equals(gt.fitnessCenter) &&
+                    visitor.fitnessCenter.Contains(gt.fitnessCenter) &&
                     visitor.groupTrainings.Contains(gt))
                 {
                     <td>

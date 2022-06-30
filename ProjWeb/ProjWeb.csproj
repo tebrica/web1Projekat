@@ -173,6 +173,7 @@
     <Content Include="Views\Users\Login.cshtml" />
     <Content Include="Views\Fitness\Fitness.cshtml" />
     <Content Include="Views\Users\Profile.cshtml" />
+    <Content Include="Views\Fitness\Training.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

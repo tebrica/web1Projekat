@@ -1,0 +1,77 @@
+﻿@using ProjWeb.Models
+@model GroupTraining
+@{
+    /**/
+
+    ViewBag.Title = "Training";
+    User visitor = (User)Session["visitor"];
+}
+
+@if (visitor != null)
+{
+    if (visitor.role.Equals(role.trainer))
+    {
+        <p>name: @Model.name</p>
+        <p>trainingDuration: @Model.trainingDuration</p>
+        <p>trainingTime: @Model.trainingTime</p>
+        <p>trainingType: @Model.trainingType</p>
+        <p>userCapacity: @Model.userCapacity</p>
+        <p>fitnessCenter: @Model.fitnessCenter.name</p>
+        <br />
+        <h3>EDIT TRAINING:</h3>
+        <form form method="post" action="~/Fitness/Edit">
+            <input required name="name" id="name" value="@Model.name" readonly />
+            <label for="name">name</label>
+            <br />
+            <input required name="centerName" id="centerName" value="@Model.fitnessCenter.name" readonly />
+            <label for="centerName">centerName</label>
+            <br />
+            <label>Training type</label>
+            <br />
+            <input required type="radio" id="yoga" name="trainingType" value="yoga">
+            <label for="yoga">yoga</label>
+            <br />
+            <input required type="radio" id="lesMillsTone" name="trainingType" value="lesMillsTone">
+            <label for="lesMillsTone">lesMillsTone</label>
+            <br />
+            <input required type="radio" id="bodyPump" name="trainingType" value="bodyPump">
+            <label for="bodyPump">bodyPump</label>
+            <br />
+            <input required name="trainingDuration" type="number" id="trainingDuration" />
+            <label for="trainingDuration">Training duration</label>
+            <br />
+            <input required name="trainingDate" type="date" id="trainingDate" />
+            <label for="trainingDate">Training date</label>
+            <br />
+            <input required name="hours" type="number" id="hours" />
+            <label for="hours">Training hours</label>
+            <br />
+            <input required name="userCapacity" type="number" id="userCapacity" />
+            <label for="userCapacity">User capacity</label>
+            <br />
+            @if (Model.users.Count == 0)
+            {
+                <input type="submit" value="modify" />
+            }
+            else
+            {
+                <input type="submit" value="modify" disabled />
+            }
+        </form>
+        <br />
+        <br />
+        <h3>Trainees:</h3>
+        foreach(User user in Model.users)
+        {
+            <ul>
+                <li>
+                    @user.username
+                </li>
+                <li>
+                    @user.gender
+                </li>
+            </ul>
+        }
+    }
+
+}
