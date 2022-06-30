@@ -97,28 +97,36 @@
     User visitor = (User)Session["visitor"];
     if (visitor.role.Equals(role.trainer))
     {
-        <td>
+        <h3>CREATE TRAINING:</h3>
             <form form method="post" action="~/Fitness/Create">
                 <input required name="name" id="name" />
                 <label for="name">name</label>
                 <br />
-                <input required name="dateOfBirth" type="date" id="date" />
-                <label for="date">date of birth</label>
+                <label>Training type</label>
                 <br />
-                <label>Role</label>
+                <input required type="radio" id="yoga" name="trainingType" value="yoga">
+                <label for="yoga">yoga</label>
                 <br />
-                <input required type="radio" id="visitor" name="role" value="visitor">
-                <label for="visitor">visitor</label>
+                <input required type="radio" id="lesMillsTone" name="trainingType" value="lesMillsTone">
+                <label for="lesMillsTone">lesMillsTone</label>
                 <br />
-                <input required type="radio" id="owner" name="role" value="owner">
-                <label for="owner">owner</label>
+                <input required type="radio" id="bodyPump" name="trainingType" value="bodyPump">
+                <label for="bodyPump">bodyPump</label>
                 <br />
-                <input required type="radio" id="trainer" name="role" value="trainer">
-                <label for="trainer">trainer</label>
+                <input required name="trainingDuration" type="number" id="trainingDuration" />
+                <label for="trainingDuration">Training duration</label>
                 <br />
-                <input type="submit" value="Create" />
+                <input required name="trainingDate" type="date" id="trainingDate" />
+                <label for="trainingDate">Training date</label>
+                <br />
+                <input required name="hours" type="number" id="hours" />
+                <label for="hours">Training hours</label>
+                <br />
+                <input required name="userCapacity" type="number" id="userCapacity" />
+                <label for="userCapacity">User capacity</label>
+                <br />
+                <input type="submit" name="centerName" value="@Model.name" />
             </form>
-        </td>
     }
 }
 @if ((User)Session["visitor"] != null)

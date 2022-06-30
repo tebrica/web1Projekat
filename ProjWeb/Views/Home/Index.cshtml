@@ -107,6 +107,7 @@
     </script>
 </header>
 
+<h1>@ViewBag.message NO</h1>
 <input type="text" id="Input" onkeyup="searchTable()" placeholder="Search by name...">
 <input type="text" id="Input1" onkeyup="searchTable()" placeholder="Search by address...">
 <input type="text" id="Input2" onkeyup="searchTable()" placeholder="Search by year...">
@@ -125,21 +126,21 @@
     </tr>
     @foreach (FitnessCenter fc in Model)
     {
-    <tr>
-        <td>@fc.name</td>
-        <td>@fc.owner.name</td>
-        <td>@fc.address</td>
-        <td>@fc.openingYear</td>
-        <td>@fc.priceGroupTraining</td>
-        <td>@fc.priceMonth</td>
-        <td>@fc.pricePersonalTraining</td>
-        <td>@fc.priceTraining</td>
-        <td>@fc.priceYear</td>
-        <td>
-            <form form method="get" action="~/Fitness/GetFitnessCenter">
-                <input type="submit" name="page" value="@fc.name" style="width:100%"/>
-            </form>
-        </td>
-    </tr>
+        <tr>
+            <td>@fc.name</td>
+            <td>@fc.owner.name</td>
+            <td>@fc.address</td>
+            <td>@fc.openingYear</td>
+            <td>@fc.priceGroupTraining</td>
+            <td>@fc.priceMonth</td>
+            <td>@fc.pricePersonalTraining</td>
+            <td>@fc.priceTraining</td>
+            <td>@fc.priceYear</td>
+            <td>
+                <form form method="get" action="~/Fitness/GetFitnessCenter">
+                    <input type="submit" name="page" value="@fc.name" style="width:100%" />
+                </form>
+            </td>
+        </tr>
     }
 </table>

@@ -69,5 +69,27 @@ namespace ProjWeb.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+        public ActionResult Create()
+        {
+            var name = Request["name"] != null ? Request["name"] : string.Empty;
+            var trainingType = Request["trainingType"] != null ? Request["trainingType"] : string.Empty;
+            var trainingDuration = Request["trainingDuration"] != null ? Request["trainingDuration"] : string.Empty;
+            var trainingDate = Request["trainingDate"] != null ? Request["trainingDate"] : string.Empty;
+            var userCapacity = Request["userCapacity"] != null ? Request["userCapacity"] : string.Empty;
+            var centerName = Request["centerName"] != null ? Request["centerName"] : string.Empty;
+            var hours = Request["hours"] != null ? Request["hours"] : string.Empty;
+
+            Enum.TryParse(trainingType, out trainingType tType);
+            DateTime.TryParse(trainingDate, out DateTime tDate);
+            tDate = tDate.AddHours(int.Parse(hours));
+            if (tDate < DateTime.Now.AddDays(3))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            GroupTraining gt = new GroupTraining(name, tType, Database.fitnessCenters[centerName], int.Parse(trainingDuration), tDate, int.Parse(userCapacity), new List<User>());
+            Database.groupTrainings.Add(gt.name, gt);
+            
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
