@@ -43,10 +43,9 @@ namespace ProjWeb.Controllers
            string.Empty;
 
             User visitor = (User)Session["visitor"];
-            if (visitor != null)
+            if (username == string.Empty)
             {
                 username = visitor.username;
-                roleString = visitor.role.ToString();
             }
 
             Enum.TryParse(genderString, out gender gender);
@@ -67,7 +66,7 @@ namespace ProjWeb.Controllers
                 );
             try
             {
-                if (visitor != null)
+                if (visitor != null && visitor.role == role)
                 {
                     Database.users[username] = user;
                 }
@@ -81,7 +80,10 @@ namespace ProjWeb.Controllers
                 ViewBag.message = "USERNAME EXISTS";
                 return View("Register");
             }
+            if(visitor == null || visitor.role == role)
+            {
                 Session["visitor"] = user;
+            }
 
             return RedirectToAction("Index", "Home");
         }
@@ -97,6 +99,10 @@ namespace ProjWeb.Controllers
             {
                 if (Database.users[username].password.Equals(password))
                 {
+                    if (Database.users[username].trainerBanned)
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
                     Session["visitor"] = Database.users[username];
                 }
             }
@@ -107,6 +113,10 @@ namespace ProjWeb.Controllers
         {
             Session["visitor"] = null;
             return RedirectToAction("Index", "Home");
+        }
+        public ActionResult ShowTrainer()
+        {
+            return View("AddTrainer");
         }
     }
 }

@@ -53,7 +53,7 @@
         {
             continue;
         }
-    <tr>
+        <tr>
             @if ((User)Session["visitor"] != null)
             {
                 User visitor = (User)Session["visitor"];
@@ -114,36 +114,46 @@
     User visitor = (User)Session["visitor"];
     if (visitor.role.Equals(role.trainer))
     {
-        <h3>CREATE TRAINING:</h3>
-            <form form method="post" action="~/Fitness/Create">
-                <input required name="name" id="name" />
-                <label for="name">name</label>
-                <br />
-                <label>Training type</label>
-                <br />
-                <input required type="radio" id="yoga" name="trainingType" value="yoga">
-                <label for="yoga">yoga</label>
-                <br />
-                <input required type="radio" id="lesMillsTone" name="trainingType" value="lesMillsTone">
-                <label for="lesMillsTone">lesMillsTone</label>
-                <br />
-                <input required type="radio" id="bodyPump" name="trainingType" value="bodyPump">
-                <label for="bodyPump">bodyPump</label>
-                <br />
-                <input required name="trainingDuration" type="number" id="trainingDuration" />
-                <label for="trainingDuration">Training duration</label>
-                <br />
-                <input required name="trainingDate" type="date" id="trainingDate" />
-                <label for="trainingDate">Training date</label>
-                <br />
-                <input required name="hours" type="number" id="hours" />
-                <label for="hours">Training hours</label>
-                <br />
-                <input required name="userCapacity" type="number" id="userCapacity" />
-                <label for="userCapacity">User capacity</label>
-                <br />
-                <input type="submit" name="centerName" value="@Model.name" />
-            </form>
+        try
+        {
+            if (visitor.fitnessCenter[0].Equals(Model))
+            {
+                <h3>CREATE TRAINING:</h3>
+                <form form method="post" action="~/Fitness/Create">
+                    <input required name="name" id="name" />
+                    <label for="name">name</label>
+                    <br />
+                    <label>Training type</label>
+                    <br />
+                    <input required type="radio" id="yoga" name="trainingType" value="yoga">
+                    <label for="yoga">yoga</label>
+                    <br />
+                    <input required type="radio" id="lesMillsTone" name="trainingType" value="lesMillsTone">
+                    <label for="lesMillsTone">lesMillsTone</label>
+                    <br />
+                    <input required type="radio" id="bodyPump" name="trainingType" value="bodyPump">
+                    <label for="bodyPump">bodyPump</label>
+                    <br />
+                    <input required name="trainingDuration" type="number" id="trainingDuration" />
+                    <label for="trainingDuration">Training duration</label>
+                    <br />
+                    <input required name="trainingDate" type="date" id="trainingDate" />
+                    <label for="trainingDate">Training date</label>
+                    <br />
+                    <input required name="hours" type="number" id="hours" />
+                    <label for="hours">Training hours</label>
+                    <br />
+                    <input required name="userCapacity" type="number" id="userCapacity" />
+                    <label for="userCapacity">User capacity</label>
+                    <br />
+                    <input type="submit" name="centerName" value="@Model.name" />
+                </form>
+            }
+        }
+        catch
+        {
+
+        }
     }
 }
 @if ((User)Session["visitor"] != null)
@@ -171,6 +181,60 @@
     }
 
 }
+@if ((User)Session["visitor"] != null && Model.owner.Equals((User)Session["visitor"]))
+{
+    <h4>Edit center</h4>
+    <form form method="post" action="~/Home/CreateCenter">
+        <br />
+        <input name="name" id="name" value="@Model.name" readonly />
+        <label for="name">name</label>
+        <br />
+        <input name="year" type="number" id="year" required />
+        <label for="year">opening year</label>
+        <br />
+        <input name="address" id="address" required />
+        <label for="address">address</label>
+        <br />
+        <input type="number" name="priceMonth" id="priceMonth" required />
+        <label for="priceMonth">price month</label>
+        <br />
+        <input type="number" name="priceYear" id="priceYear" required />
+        <label for="priceYear">price year</label>
+        <br />
+        <input type="number" name="priceTraining" id="priceTraining" required />
+        <label for="priceTraining">price training</label>
+        <br />
+        <input type="number" name="pricePersonalTraining" id="pricePersonalTraining" required />
+        <label for="pricePersonalTraining">price personal training</label>
+        <br />
+        <input type="number" name="priceGroupTraining" id="priceGroupTraining" required />
+        <label for="priceGroupTraining">price group training</label>
+        <br />
+        <input type="submit" value="edit center" />
+    </form>
+}
+@if ((User)Session["visitor"] != null && Model.owner.Equals((User)Session["visitor"]))
+{
+    <h3>ADD TRAINER TO CENTER</h3>
+    <ul>
+        @foreach (User u in Database.users.Values.Where(x => x.role.Equals(role.trainer) && x.fitnessCenter.Count == 0))
+        {
+            if (u.trainerBanned)
+            {
+                continue;
+            }
+
+            <li>
+                {
+                <form form method="get" action="~/Fitness/CenterAddTrainer">
+                    <input type="submit" name="trainer" value="@u.username/@Model.name" style="width:100%" />
+                </form>
+                }
+            </li>
+
+        }
+    </ul>
+}
 <ul>
     @foreach (Comment c in Database.comments.Values.Where(x => x.fitnessCenter.name.Equals(Model.name)))
     {
@@ -179,7 +243,7 @@
         {
             visitor = (User)Session["visitor"];
         }
-        if (c.approved || visitor.role.Equals(role.owner))
+        if (c.approved || (visitor.role.Equals(role.owner) && Model.owner.Equals(visitor)))
         {
             <li style="border:">
                 <p>@c.text</p>

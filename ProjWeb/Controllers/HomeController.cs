@@ -31,19 +31,41 @@ namespace ProjWeb.Controllers
             catch { }
             return View(Database.fitnessCenters.Values.OrderBy(x=>x.name));
         }
-
-        public ActionResult About()
+        [HttpPost]
+        public ActionResult CreateCenter()
         {
-            ViewBag.Message = "Your application description page.";
+            var name = Request["name"] != null ? Request["name"] : string.Empty;
+            var address = Request["address"] != null ? Request["address"] : string.Empty;
+            var year = Request["year"] != null ? Request["year"] : string.Empty;
+            var priceMonth = Request["priceMonth"] != null ? Request["priceMonth"] : string.Empty;
+            var priceYear = Request["priceYear"] != null ? Request["priceYear"] : string.Empty;
+            var priceTraining = Request["priceTraining"] != null ? Request["priceTraining"] : string.Empty;
+            var pricePersonalTraining = Request["pricePersonalTraining"] != null ? Request["pricePersonalTraining"] : string.Empty;
+            var priceGroupTraining = Request["priceGroupTraining"] != null ? Request["priceGroupTraining"] : string.Empty;
 
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
+            try
+            {
+                FitnessCenter fc = new FitnessCenter(name, int.Parse(year), address, (User)Session["visitor"], int.Parse(priceMonth), int.Parse(priceYear), int.Parse(priceTraining), int.Parse(priceGroupTraining), int.Parse(pricePersonalTraining));
+                Database.fitnessCenters.Add(name, fc);
+                User owner = (User)Session["visitor"];
+                Database.users[owner.username].fitnessCenter.Add(fc);
+            }
+            catch
+            {
+                User owner = (User)Session["visitor"];
+                if (Database.fitnessCenters[name].owner.name.Equals(owner.name))
+                {
+                    FitnessCenter fc = new FitnessCenter(name, int.Parse(year), address, (User)Session["visitor"], int.Parse(priceMonth), int.Parse(priceYear), int.Parse(priceTraining), int.Parse(priceGroupTraining), int.Parse(pricePersonalTraining));
+                    Database.fitnessCenters[name] = fc;
+                    owner.fitnessCenter[owner.fitnessCenter.FindIndex(x => x.name.Equals(fc.name))] = fc;
+                }
+                else
+                {
+                    ViewBag.message = "Center already exists";
+                    return View("Index", Database.fitnessCenters.Values);
+                }
+            }
+            return RedirectToAction("Index");
         }
     }
 }

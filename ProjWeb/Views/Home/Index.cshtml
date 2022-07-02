@@ -107,7 +107,7 @@
     </script>
 </header>
 
-<h1>@ViewBag.message NO</h1>
+<h1>@ViewBag.message</h1>
 <input type="text" id="Input" onkeyup="searchTable()" placeholder="Search by name...">
 <input type="text" id="Input1" onkeyup="searchTable()" placeholder="Search by address...">
 <input type="text" id="Input2" onkeyup="searchTable()" placeholder="Search by year...">
@@ -126,21 +126,67 @@
     </tr>
     @foreach (FitnessCenter fc in Model)
     {
-        <tr>
-            <td>@fc.name</td>
-            <td>@fc.owner.name</td>
-            <td>@fc.address</td>
-            <td>@fc.openingYear</td>
-            <td>@fc.priceGroupTraining</td>
-            <td>@fc.priceMonth</td>
-            <td>@fc.pricePersonalTraining</td>
-            <td>@fc.priceTraining</td>
-            <td>@fc.priceYear</td>
+        if (fc.deleted)
+        {
+            continue;
+        }
+    <tr>
+        <td>@fc.name</td>
+        <td>@fc.owner.name</td>
+        <td>@fc.address</td>
+        <td>@fc.openingYear</td>
+        <td>@fc.priceGroupTraining</td>
+        <td>@fc.priceMonth</td>
+        <td>@fc.pricePersonalTraining</td>
+        <td>@fc.priceTraining</td>
+        <td>@fc.priceYear</td>
+        <td>
+            <form form method="get" action="~/Fitness/GetFitnessCenter">
+                <input type="submit" name="page" value="@fc.name" style="width:100%" />
+            </form>
+        </td>
+        @if ((User)Session["visitor"] != null && fc.owner.Equals((User)Session["visitor"]) && Database.groupTrainings.Values.Where(x=>x.fitnessCenter.name.Equals(fc.name)).Count().Equals(0))
+        {
             <td>
-                <form form method="get" action="~/Fitness/GetFitnessCenter">
-                    <input type="submit" name="page" value="@fc.name" style="width:100%" />
+                <form form method="post" action="~/Fitness/DeleteFitnessCenter">
+                    <input type="submit" name="name" value="@fc.name" style="width:100%" />
                 </form>
             </td>
-        </tr>
+        }
+    </tr>
     }
 </table>
+@{User visitor = (User)Session["visitor"]; }
+@if (visitor != null && visitor.role.Equals(role.owner))
+{
+        
+    <h4>New center</h4>
+    <form form method="post" action="~/Home/CreateCenter">
+        <br />
+        <input name="name" id="name" required/>
+        <label for="name">name</label>
+        <br />
+        <input name="year" type="number" id="year" required/>
+        <label for="year">opening year</label>
+        <br />
+        <input name="address" id="address" required/>
+        <label for="address">address</label>
+        <br />
+        <input type="number" name="priceMonth" id="priceMonth" required/>
+        <label for="priceMonth">price month</label>
+        <br />
+        <input type="number" name="priceYear" id="priceYear" required/>
+        <label for="priceYear">price year</label>
+        <br />
+        <input type="number" name="priceTraining" id="priceTraining" required/>
+        <label for="priceTraining">price training</label>
+        <br />
+        <input type="number" name="pricePersonalTraining" id="pricePersonalTraining" required/>
+        <label for="pricePersonalTraining">price personal training</label>
+        <br />
+        <input type="number" name="priceGroupTraining" id="priceGroupTraining" required/>
+        <label for="priceGroupTraining">price group training</label>
+        <br />
+        <input type="submit" value="add center"/>
+    </form>
+    }

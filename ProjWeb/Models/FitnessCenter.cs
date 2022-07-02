@@ -16,9 +16,11 @@ namespace ProjWeb.Models
         public int priceTraining;
         public int priceGroupTraining;
         public int pricePersonalTraining;
+        public bool deleted;
 
         public FitnessCenter(string name, int openingYear, string address, User owner, int priceMonth, int priceYear, int priceTraining, int priceGroupTraining, int pricePersonalTraining)
         {
+            this.deleted = false;
             this.name = name;
             this.openingYear = openingYear;
             this.address = address;

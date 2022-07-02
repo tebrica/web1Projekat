@@ -22,11 +22,15 @@
                 <ul class="nav navbar-nav">
                     @{
                         User visitor = (User)Session["visitor"];
-                        
+
                         if (visitor != null)
                         {
                             <li><a href="~/users/Profile">PROFILE</a></li>
                             <li><a href="~/users/logout">LOGOUT</a></li>
+                            if (visitor.role.Equals(role.owner))
+                            {
+                                <li><a href="~/users/showTrainer">ADD TRAINER</a></li>
+                            }
                         }
                         else
                         {

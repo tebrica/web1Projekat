@@ -64,6 +64,9 @@
             <input required type="radio" id="female" name="gender" value="female">
             <label for="female">female</label>
             <br />
+            <input required name="role" id="role" value="@visitor.role.ToString()" readonly />
+            <label for="role">role</label>
+            <br />
             <input type="submit" value="Edit" />
         </form>
         <br />
@@ -84,16 +87,37 @@
             </tr>
             @foreach (GroupTraining gt in visitor.groupTrainings)
             {
-            <tr>
-                <td>@gt.name</td>
-                <td>@gt.trainingType</td>
-                <td>@gt.fitnessCenter.name</td>
-                <td>@gt.trainingDuration</td>
-                <td>@gt.trainingTime</td>
-                <td>@gt.userCapacity</td>
-            </tr>
+                <tr>
+                    <td>@gt.name</td>
+                    <td>@gt.trainingType</td>
+                    <td>@gt.fitnessCenter.name</td>
+                    <td>@gt.trainingDuration</td>
+                    <td>@gt.trainingTime</td>
+                    <td>@gt.userCapacity</td>
+                </tr>
             }
         </table>
+        if (visitor.role.Equals(role.owner))
+        {
+            <h3>BAN TRAINER</h3>
+            foreach (User u in Database.users.Values.Where(x => x.role.Equals(role.trainer) && x.fitnessCenter.Count != 0))
+            {
+                if (u.trainerBanned)
+                {
+                    continue;
+                }
+
+                <li>
+                    @if (visitor.fitnessCenter.Contains(u.fitnessCenter[0]))
+                    {
+                        <form form method="post" action="~/Fitness/BanTrainer">
+                            <input type="submit" name="trainer" value="@u.username" style="width:100%" />
+                        </form>
+                    }
+                </li>
+
+            }
+        }
     }
 }
 

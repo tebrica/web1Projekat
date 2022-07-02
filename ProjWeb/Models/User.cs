@@ -13,6 +13,7 @@ namespace ProjWeb.Models
         public string lastName;
         public gender gender;
         public string email;
+        public bool trainerBanned;
         public DateTime dateOfBirth;
         public role role;
         public List<GroupTraining> groupTrainings;
@@ -20,6 +21,7 @@ namespace ProjWeb.Models
 
         public User(string username, string password, string name, string lastName, gender gender, string email, DateTime dateOfBirth, role role, List<GroupTraining> groupTrainings, List<FitnessCenter> fitnessCenter)
         {
+            this.trainerBanned = false;
             this.username = username;
             this.password = password;
             this.name = name;

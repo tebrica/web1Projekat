@@ -126,5 +126,40 @@ namespace ProjWeb.Controllers
             var name = Request["training"] != null ? Request["training"] : string.Empty;
             return View("Training", Database.groupTrainings[name]);
         }
+        public ActionResult DeleteFitnessCenter()
+        {
+            var name = Request["name"] != null ? Request["name"] : string.Empty;
+
+            foreach(User u in Database.users.Values)
+            {
+                if(u.role.Equals(role.trainer) && u.fitnessCenter.Contains(Database.fitnessCenters[name]))
+                {
+                    Database.users[u.username].trainerBanned = true;
+                }
+            }
+
+            Database.fitnessCenters.Remove(name);
+
+            return RedirectToAction("Index", "Home");
+        }
+        public ActionResult CenterAddTrainer()
+        {
+            var name = Request["trainer"] != null ? Request["trainer"] : string.Empty;
+
+            string trainer = name.Split('/')[0];
+            string center = name.Split('/')[1];
+
+            Database.users[trainer].fitnessCenter.Add(Database.fitnessCenters[center]);
+
+            return RedirectToAction("Index", "Home");
+        }
+        [HttpPost]
+        public ActionResult BanTrainer()
+        {
+            var trainer = Request["trainer"] != null ? Request["trainer"] : string.Empty;
+            Database.users[trainer].trainerBanned = true;
+
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

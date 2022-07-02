@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "Add Trainer";
+}
+@using ProjWeb.Models
+<h2>Add Trainer</h2>
+<h3>@ViewBag.message</h3>
+@{
+    User visitor = (User)Session["visitor"];
+    if (visitor.role.Equals(role.owner))
+    {
+<form method="post" action="~/Users/Register">
+    <input required name="username" id="username" />
+    <label for="username">username</label>
+    <br />
+    <input required name="password" type="password" id="password" />
+    <label for="password">password</label>
+    <br />
+    <input required name="name" id="name" />
+    <label for="name">name</label>
+    <br />
+    <input required name="lastName" id="lastName" />
+    <label for="lastName">last name</label>
+    <br />
+    <input required name="email" type="email" id="email" />
+    <label for="email">email</label>
+    <br />
+    <input required name="dateOfBirth" type="date" id="date" />
+    <label for="date">date of birth</label>
+    <br />
+    <br />
+    <label>gender</label>
+    <br />
+    <input required type="radio" id="male" name="gender" value="male">
+    <label for="male">male</label>
+    <br />
+    <input required type="radio" id="female" name="gender" value="female">
+    <label for="female">female</label>
+    <br />
+    <br />
+    <input required name="role" id="role" value="trainer" readonly/>
+    <label for="role">role</label>
+    <br />
+    <input type="submit" value="Register" />
+</form>
+    }
+}
