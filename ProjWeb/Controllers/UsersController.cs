@@ -69,10 +69,12 @@ namespace ProjWeb.Controllers
                 if (visitor != null && visitor.role == role)
                 {
                     Database.users[username] = user;
+                    FileHandler.SaveData(Database.users.Values.ToList(), "users.xml");
                 }
                 else
                 {
                     Database.users.Add(username, user);
+                    FileHandler.SaveData(Database.users.Values.ToList(), "users.xml");
                 }
             }
             catch

@@ -32,8 +32,9 @@ namespace ProjWeb.Controllers
            string.Empty;
 
             User visitor = (User)Session["visitor"];
-            int newId = Database.comments.Keys.Max() + 1;
-            Database.comments.Add(newId, new Comment(visitor, Database.fitnessCenters[center], comment, int.Parse(mark), newId));
+            Comment c = new Comment(visitor, Database.fitnessCenters[center], comment, int.Parse(mark), 0);
+            Database.comments.Add(c.id, c);
+            FileHandler.SaveData(Database.comments.Values.ToList(), "comments.xml");
             return View("Fitness", Database.fitnessCenters[center]);
         }
         public ActionResult SignUp()
@@ -43,6 +44,8 @@ namespace ProjWeb.Controllers
             User visitor = (User)Session["visitor"];
             Database.groupTrainings[training].users.Add(visitor);
             Database.users[visitor.username].groupTrainings.Add(Database.groupTrainings[training]);
+            FileHandler.SaveData(Database.users.Values.ToList(), "users.xml");
+            FileHandler.SaveData(Database.groupTrainings.Values.ToList(), "trainings.xml");
 
             return RedirectToAction("Profile", "Users");
         }
@@ -54,7 +57,9 @@ namespace ProjWeb.Controllers
             {
                 int ind = int.Parse(comment);
                 Database.comments[ind].approved = true;
-            }catch{
+                FileHandler.SaveData(Database.comments.Values.ToList(), "comments.xml");
+            }
+            catch{
 
             }
             return RedirectToAction("Index", "Home");
@@ -65,6 +70,7 @@ namespace ProjWeb.Controllers
            string.Empty;
 
             Database.groupTrainings[training].deleted = true;
+            FileHandler.SaveData(Database.groupTrainings.Values.ToList(), "trainings.xml");
 
 
             return RedirectToAction("Index", "Home");
@@ -91,8 +97,9 @@ namespace ProjWeb.Controllers
                 GroupTraining gt = new GroupTraining(name, tType, Database.fitnessCenters[centerName], int.Parse(trainingDuration), tDate, int.Parse(userCapacity), new List<User>());
                 Database.groupTrainings.Add(gt.name, gt);
                 User visitor = (User)Session["visitor"];
-                visitor.fitnessCenter.Add(Database.fitnessCenters[centerName]);
-                visitor.groupTrainings.Add(gt);
+                Database.users[visitor.username].groupTrainings.Add(gt);
+                FileHandler.SaveData(Database.groupTrainings.Values.ToList(), "trainings.xml");
+                FileHandler.SaveData(Database.users.Values.ToList(), "users.xml");
             }
             catch { }
             return RedirectToAction("Index", "Home");
@@ -116,6 +123,7 @@ namespace ProjWeb.Controllers
             }
             GroupTraining gt = new GroupTraining(name, tType, Database.fitnessCenters[centerName], int.Parse(trainingDuration), tDate, int.Parse(userCapacity), new List<User>());
             Database.groupTrainings[gt.name] = gt;
+            FileHandler.SaveData(Database.groupTrainings.Values.ToList(), "trainings.xml");
             User visitor = (User)Session["visitor"];
             visitor.groupTrainings[visitor.groupTrainings.FindIndex(x => x.name == gt.name)] = gt;
 
@@ -135,10 +143,12 @@ namespace ProjWeb.Controllers
                 if(u.role.Equals(role.trainer) && u.fitnessCenter.Contains(Database.fitnessCenters[name]))
                 {
                     Database.users[u.username].trainerBanned = true;
+                    FileHandler.SaveData(Database.users.Values.ToList(), "users.xml");
                 }
             }
 
-            Database.fitnessCenters.Remove(name);
+            Database.fitnessCenters[name].deleted = true;
+            FileHandler.SaveData(Database.fitnessCenters.Values.ToList(), "centers.xml");
 
             return RedirectToAction("Index", "Home");
         }
@@ -150,6 +160,7 @@ namespace ProjWeb.Controllers
             string center = name.Split('/')[1];
 
             Database.users[trainer].fitnessCenter.Add(Database.fitnessCenters[center]);
+            FileHandler.SaveData(Database.users.Values.ToList(), "users.xml");
 
             return RedirectToAction("Index", "Home");
         }
@@ -158,6 +169,7 @@ namespace ProjWeb.Controllers
         {
             var trainer = Request["trainer"] != null ? Request["trainer"] : string.Empty;
             Database.users[trainer].trainerBanned = true;
+            FileHandler.SaveData(Database.users.Values.ToList(), "users.xml");
 
             return RedirectToAction("Index", "Home");
         }

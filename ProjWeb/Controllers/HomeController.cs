@@ -13,22 +13,46 @@ namespace ProjWeb.Controllers
         {
             try
             {
-                Database.fitnessCenters.Add("asd", new FitnessCenter("asd", DateTime.Now.Year, "asd 99", new Models.User(), 1, 4, 4, 123, 123));
-                Database.fitnessCenters.Add("qwe", new FitnessCenter("qwe", 2021, "qwe 11", new Models.User(), 2, 1, 3, 123, 123));
-                Database.fitnessCenters.Add("zxc", new FitnessCenter("zxc", 2020, "zxc 34", new Models.User(), 3, 2, 2, 123, 123));
-                Database.fitnessCenters.Add("fgh", new FitnessCenter("fgh", 2019, "fgh 81", new Models.User(), 4, 3, 1, 123, 123));
+                //User djura = new Models.User("djura", "a", "a", "a", gender.male, "a@a", DateTime.Now, role.owner, new List<GroupTraining>(), new List<FitnessCenter>());
+                //Database.users.Add("djura", djura);
 
-                Database.groupTrainings.Add("asd", new GroupTraining("asd", trainingType.bodyPump, Database.fitnessCenters["asd"], 3, DateTime.Now, 10, new List<User>()));
-                Database.groupTrainings.Add("qwe", new GroupTraining("qwe", trainingType.lesMillsTone, Database.fitnessCenters["zxc"], 3, DateTime.Now, 15, new List<User>()));
-                Database.groupTrainings.Add("zxc", new GroupTraining("zxc", trainingType.bodyPump, Database.fitnessCenters["asd"], 3, DateTime.Now, 10, new List<User>()));
-                Database.groupTrainings.Add("fgh", new GroupTraining("fgh", trainingType.yoga, Database.fitnessCenters["fgh"], 3, DateTime.Now, 12, new List<User>()));
+                //FitnessCenter fc = new FitnessCenter("asd", DateTime.Now.Year, "asd 99", djura, 1, 4, 4, 123, 123);
+                //Database.fitnessCenters.Add("asd", fc);
+                //Database.fitnessCenters.Add("qwe", new FitnessCenter("qwe", 2021, "qwe 11", djura, 2, 1, 3, 123, 123));
+                //Database.fitnessCenters.Add("zxc", new FitnessCenter("zxc", 2020, "zxc 34", djura, 3, 2, 2, 123, 123));
+                //Database.fitnessCenters.Add("fgh", new FitnessCenter("fgh", 2019, "fgh 81", djura, 4, 3, 1, 123, 123));
 
-                Database.comments.Add(0, new Comment(new Models.User(), Database.fitnessCenters["asd"], "PRE LO SE", 1, 0));
-                Database.comments.Add(1, new Comment(new Models.User(), Database.fitnessCenters["asd"], "KIDA", 5, 1));
-                Database.comments.Add(2, new Comment(new Models.User(), Database.fitnessCenters["asd"], "SMECE", 2, 2));
-                Database.comments.Add(3, new Comment(new Models.User(), Database.fitnessCenters["qwe"], "STA JE OVO", 2, 3));
+                //GroupTraining gt = new GroupTraining("asd", trainingType.bodyPump, Database.fitnessCenters["asd"], 3, DateTime.Now, 10, new List<User>());
+                //Database.groupTrainings.Add("asd", gt);
+                //Database.groupTrainings.Add("qwe", new GroupTraining("qwe", trainingType.lesMillsTone, Database.fitnessCenters["zxc"], 3, DateTime.Now, 15, new List<User>()));
+                //Database.groupTrainings.Add("zxc", new GroupTraining("zxc", trainingType.bodyPump, Database.fitnessCenters["asd"], 3, DateTime.Now, 10, new List<User>()));
+                //Database.groupTrainings.Add("fgh", new GroupTraining("fgh", trainingType.yoga, Database.fitnessCenters["fgh"], 3, DateTime.Now, 12, new List<User>()));
+
+                //Database.comments.Add(0, new Comment(djura, Database.fitnessCenters["asd"], "PRE LO SE", 1, 0));
+                //Database.comments.Add(1, new Comment(djura, Database.fitnessCenters["asd"], "KIDA", 5, 1));
+                //Database.comments.Add(2, new Comment(djura, Database.fitnessCenters["asd"], "SMECE", 2, 2));
+                //Database.comments.Add(3, new Comment(djura, Database.fitnessCenters["qwe"], "STA JE OVO", 2, 3));
+
+                //djura.groupTrainings.Add(gt);
+                //djura.fitnessCenter.Add(fc);
+                //gt.users.Add(djura);
+
+                //FileHandler.SaveData(Database.users.Values.ToList(), "users.xml");
+                //FileHandler.SaveData(Database.comments.Values.ToList(), "comments.xml");
+                //FileHandler.SaveData(Database.fitnessCenters.Values.ToList(), "centers.xml");
+                //FileHandler.SaveData(Database.groupTrainings.Values.ToList(), "trainings.xml");
+                List<FitnessCenter> f = FileHandler.ReadData<List<FitnessCenter>>("centers.xml");
+                FileHandler.CenterLoad(f);
+                List<User> u = FileHandler.ReadData<List<User>>("users.xml");
+                FileHandler.UsersLoad(u);
+                List<GroupTraining> g = FileHandler.ReadData<List<GroupTraining>>("trainings.xml");
+                FileHandler.TrainingLoad(g);
+                List<Comment> c = FileHandler.ReadData<List<Comment>>("comments.xml");
+                FileHandler.CommentLoad(c);
             }
-            catch { }
+            catch(Exception e) {
+                string m = e.Message;
+            }
             return View(Database.fitnessCenters.Values.OrderBy(x=>x.name));
         }
         [HttpPost]
@@ -49,6 +73,8 @@ namespace ProjWeb.Controllers
                 Database.fitnessCenters.Add(name, fc);
                 User owner = (User)Session["visitor"];
                 Database.users[owner.username].fitnessCenter.Add(fc);
+                FileHandler.SaveData(Database.fitnessCenters.Values.ToList(), "centers.xml");
+                FileHandler.SaveData(Database.users.Values.ToList(), "users.xml");
             }
             catch
             {
@@ -58,6 +84,7 @@ namespace ProjWeb.Controllers
                     FitnessCenter fc = new FitnessCenter(name, int.Parse(year), address, (User)Session["visitor"], int.Parse(priceMonth), int.Parse(priceYear), int.Parse(priceTraining), int.Parse(priceGroupTraining), int.Parse(pricePersonalTraining));
                     Database.fitnessCenters[name] = fc;
                     owner.fitnessCenter[owner.fitnessCenter.FindIndex(x => x.name.Equals(fc.name))] = fc;
+                    FileHandler.SaveData(Database.fitnessCenters.Values.ToList(), "centers.xml");
                 }
                 else
                 {

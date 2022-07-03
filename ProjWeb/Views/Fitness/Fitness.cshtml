@@ -79,7 +79,7 @@
             @if ((User)Session["visitor"] != null && gt.userCapacity > gt.users.Count)
             {
                 User visitor = (User)Session["visitor"];
-                if (!visitor.groupTrainings.Contains(gt) && visitor.role.Equals(role.visitor))
+                if ((visitor.groupTrainings.Where(x=>x.name.Equals(gt.name)) == null) && visitor.role.Equals(role.visitor))
                 {
                     <td>
                         <form form method="post" action="~/Fitness/SignUp">
@@ -107,7 +107,6 @@
     }
 </table>
 <br />
-<h3>COMMENTS:</h3>
 <br />
 @if ((User)Session["visitor"] != null)
 {
@@ -225,16 +224,15 @@
             }
 
             <li>
-                {
                 <form form method="get" action="~/Fitness/CenterAddTrainer">
                     <input type="submit" name="trainer" value="@u.username/@Model.name" style="width:100%" />
                 </form>
-                }
             </li>
 
         }
     </ul>
 }
+<h3>COMMENTS:</h3>
 <ul>
     @foreach (Comment c in Database.comments.Values.Where(x => x.fitnessCenter.name.Equals(Model.name)))
     {

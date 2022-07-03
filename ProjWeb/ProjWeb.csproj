@@ -49,6 +49,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -128,6 +129,7 @@
     </Compile>
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Database.cs" />
+    <Compile Include="Models\FileHandler.cs" />
     <Compile Include="Models\FitnessCenter.cs" />
     <Compile Include="Models\GroupTraining.cs" />
     <Compile Include="Models\User.cs" />

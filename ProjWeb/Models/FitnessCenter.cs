@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Xml.Serialization;
 
 namespace ProjWeb.Models
 {
+    [Serializable()]
     public class FitnessCenter
     {
         public string name;
         public int openingYear;
         public string address;
+        [XmlIgnore]
         public User owner;
         public int priceMonth;
         public int priceYear;
@@ -30,6 +33,10 @@ namespace ProjWeb.Models
             this.priceTraining = priceTraining;
             this.priceGroupTraining = priceGroupTraining;
             this.pricePersonalTraining = pricePersonalTraining;
+        }
+        public FitnessCenter()
+        {
+
         }
     }
 }
